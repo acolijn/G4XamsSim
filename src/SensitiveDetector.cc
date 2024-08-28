@@ -51,7 +51,6 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory*) {
     newHit->particleEnergy1 = step->GetPostStepPoint()->GetKineticEnergy(); 
 
     
-
     //if (newHit->trackID == 1){
     //    newHit->Print();
     //    // get the track energy before the step

@@ -77,7 +77,7 @@ DetectorConstruction::~DetectorConstruction()
  * @brief Constructs the detector geometry.
  * 
  * This function is responsible for constructing the detector geometry by defining materials,
- * constructing various volumes such as the world volume, water tank, cryostats, liquid xenon,
+ * constructing various volumes such as the world volume, cryostats, liquid xenon,
  * and fiducial volume. It also initializes the gamma ray helper class with the defined materials.
  * 
  * @return The physical volume of the world.
@@ -98,10 +98,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Construct world volume
   //
   ConstructWorld();
-  //
-  // Construct water tank
-  //
-  ConstructWaterTank();
   //
   // Construct outer cryostat and fill with vacuum
   //
@@ -153,7 +149,7 @@ void DetectorConstruction::ConstructWorld(){
   //
   // Construct the world volume
   //
-  G4double world_sizeXY = 20*m, world_sizeZ = 15*m;
+  G4double world_sizeXY = 1*m, world_sizeZ = 1*m;
   
   G4Material* world_mat = G4Material::GetMaterial("G4_AIR");
   auto solidWorld = new G4Box("World", 0.5 * world_sizeXY, 0.5 * world_sizeXY, 0.5 * world_sizeZ);
@@ -168,34 +164,6 @@ void DetectorConstruction::ConstructWorld(){
     0,                                         // copy number
     fCheckOverlaps);                            // overlaps checking
 
-}
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void DetectorConstruction::ConstructWaterTank(){
-  //
-  // Water tank
-  //
-  G4double tank_radius = 5*m;
-  G4double tank_height = 10*m;
-  G4cout << "DetectorConstruction::ConstructWaterTank Constructing water tank" << G4endl;
-  G4cout << "DetectorConstruction::ConstructWaterTank tank_radius = " << tank_radius/cm << " cm"<<G4endl;
-  G4cout << "DetectorConstruction::ConstructWaterTank tank_height = " << tank_height/cm << " cm"<<G4endl;
-
-  G4Material* water = G4Material::GetMaterial("G4_WATER");
-  auto solidWaterTank = new G4Tubs("WaterTank",           // its name
-    0., tank_radius, tank_height / 2., 0. * deg, 360. * deg);  // its size
-
-  fWaterTankLogical = new G4LogicalVolume(solidWaterTank,  // its solid
-    water,                                         // its material
-    "WaterTank");                                    // its name
-
-  fWaterTankPhysical = new G4PVPlacement(nullptr,  // no rotation
-    G4ThreeVector(),          // at (0,0,0)
-    fWaterTankLogical,        // its logical volume
-    "WaterTank",              // its name
-    fWorldLogical,            // its mother  volume
-    false,                    // no boolean operation
-    0,                        // copy number
-    fCheckOverlaps);           // overlaps checking
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void DetectorConstruction::ConstructOuterCryostat(){
@@ -222,7 +190,7 @@ void DetectorConstruction::ConstructOuterCryostat(){
     G4ThreeVector(),          // at (0,0,0)
     fOuterCryostatLogical,     // its logical volume
     "OuterCryostat",          // its name
-    fWaterTankLogical,        // its mother  volume
+    fWorldLogical,        // its mother  volume
     false,                    // no boolean operation
     0,                        // copy number
     fCheckOverlaps);           // overlaps checking

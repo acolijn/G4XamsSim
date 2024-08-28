@@ -1,0 +1,20 @@
+{
+    "verbose": 0,
+    "outerCryostatRadius": "15 cm",
+    "outerCryostatHeight": "20 cm",
+    "outerCryostatWallThickness": "6 mm",
+    "innerCryostatRadius": "12 cm",
+    "innerCryostatHeight": "15 cm",
+    "innerCryostatWallThickness": "6 mm",
+    "fiducialRadius": "11.4 cm",
+    "fiducialHeight": "13.8 cm",
+    "gpsSettings": {
+        "particle": "ion",
+        "ion": "11 22",
+        "posType": "Point",	
+        "posCentre": "12. 0. 0. cm",
+        "angType": "iso"
+    },
+    "outputFileName": "na22",
+    "printProgress": 10000
+}

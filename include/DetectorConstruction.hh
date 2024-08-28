@@ -52,7 +52,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     G4VPhysicalVolume* Construct() override;
     void ConstructWorld();
-    void ConstructWaterTank();
     void ConstructOuterCryostat();
     void ConstructInnerCryostat();    
     void ConstructLXe();
@@ -90,7 +89,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     //logical volumes
     G4LogicalVolume* fWorldLogical = nullptr;
-    G4LogicalVolume* fWaterTankLogical = nullptr;
     G4LogicalVolume* fOuterCryostatLogical = nullptr;
     G4LogicalVolume* fVacuumLogical = nullptr;
     G4LogicalVolume* fInnerCryostatLogical = nullptr;
@@ -100,7 +98,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     //physical volumes
     G4VPhysicalVolume* fWorldPhysical = nullptr;
-    G4VPhysicalVolume* fWaterTankPhysical = nullptr;
     G4VPhysicalVolume* fOuterCryostatPhysical = nullptr;
     G4VPhysicalVolume* fVacuumPhysical = nullptr;
     G4VPhysicalVolume* fInnerCryostatPhysical = nullptr;

@@ -171,7 +171,7 @@ void EventAction::AnalyzeHits(const G4Event* event) {
 
   // cluster hits based on spatial and time thresholds
   std::vector<Cluster> fClusters;
-  G4double spatialThreshold = 10 * cm;
+  G4double spatialThreshold = 2 * cm;
   G4double timeThreshold = 2.0 * ns;
   ClusterHits(allHits, spatialThreshold, timeThreshold, fClusters); 
 }
@@ -215,15 +215,12 @@ void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold
       G4int trackID = hit->trackID;
 
       G4bool isRelevantProcess = (process == "compt" || process == "phot");
-      G4bool isPrimaryTrack = (trackID == 1);
 
-      if (isPrimaryTrack) {
-          if (process == "compt") fNcomp++;
-          if (process == "phot") fNphot++;
-          if (isRelevantProcess) {
-              clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}});
-              hit->used = true;
-          }
+      if (process == "compt") fNcomp++;
+      if (process == "phot") fNphot++;
+      if (isRelevantProcess) {
+          clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}});
+          hit->used = true;
       }
     }
 
