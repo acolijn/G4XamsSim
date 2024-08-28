@@ -1,0 +1,7 @@
+/user/z37/g4/G4XamsSim/build/CMakeFiles/G4XamsSim.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/edit_cache.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/rebuild_cache.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/list_install_components.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/install.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/install/local.dir
+/user/z37/g4/G4XamsSim/build/CMakeFiles/install/strip.dir
