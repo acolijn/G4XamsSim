@@ -19,6 +19,9 @@
 
 {gpsCommands}
 
+/event/spatialThreshold {spatialThreshold}
+/event/timeThreshold {timeThreshold}
+
 /random/setSeeds {randomSeed1} {randomSeed2}
 
 # output filename

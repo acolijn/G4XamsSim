@@ -1,33 +1,5 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-/// \file B1/src/EventAction.cc
-/// \brief Implementation of the G4FastSim::EventAction class
-
 #include "EventAction.hh"
+#include "EventActionMessenger.hh"	
 #include "RunAction.hh"
 
 #include "G4Event.hh"
@@ -42,23 +14,25 @@
 #include "Hit.hh"
 #include "G4SystemOfUnits.hh"
 
-///namespace G4FastSim
-///{
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-//using namespace G4FastSim;
-
 namespace G4XamsSim {
 
 //std::mutex EventAction::mtx;
 
-EventAction::EventAction() : G4UserEventAction()
+EventAction::EventAction() : G4UserEventAction(),
+      fSpatialThreshold(2.5 * cm),  // Default values
+      fTimeThreshold(5.0 * ns)
 {
   // set printing per each event
   G4RunManager::GetRunManager()->SetPrintProgress(1);
 
   //fHitsCollectionNames.push_back("LXeCollection");
   fHitsCollectionNames.push_back("LXeFiducialCollection");
+
+  fMessenger = new EventActionMessenger(this);
+}
+
+EventAction::~EventAction() {
+  delete fMessenger;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -171,9 +145,7 @@ void EventAction::AnalyzeHits(const G4Event* event) {
 
   // cluster hits based on spatial and time thresholds
   std::vector<Cluster> fClusters;
-  G4double spatialThreshold = 2 * cm;
-  G4double timeThreshold = 2.0 * ns;
-  ClusterHits(allHits, spatialThreshold, timeThreshold, fClusters); 
+  ClusterHits(allHits, fSpatialThreshold, fTimeThreshold, fClusters); 
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -204,8 +176,21 @@ G4double EventAction::CalculateTimeDifference(G4double time1, G4double time2) {
  */
 void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters) {
 
-    //G4cout<<G4endl;
-    //G4cout<<"ClusterHits: hits.size() = "<<hits.size()<<G4endl;
+    if (hits.empty()) return;  // No hits, nothing to do.
+
+    // Find the earliest hit time to normalize times relative to the start of the event.
+    G4double startTime = hits[0]->time;
+    for (const auto& hit : hits) {
+        if (hit->time < startTime) {
+            startTime = hit->time;
+        }
+    }
+
+    // Normalize hit times to the start of the event.
+    for (auto& hit : hits) {
+        hit->time -= startTime;
+    }
+
     // 
     // Finding the cluster seeds. A cluster seed is a hit from a primary track doing a Compton or photoelectric interaction.
     // For the fast simulation the primary track can have another trackID, so we do not need to check the ID.
@@ -251,6 +236,28 @@ void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold
         // If the hit was not added to any existing cluster, create a new cluster
         if (!addedToCluster) {
             clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}});
+        }
+    }
+
+    // Merge close clusters
+
+    for (size_t i = 0; i < clusters.size(); ++i) {
+        for (size_t j = i + 1; j < clusters.size(); ) {
+            if (CalculateDistance(clusters[i].position, clusters[j].position) < spatialThreshold &&
+                CalculateTimeDifference(clusters[i].time, clusters[j].time) < timeThreshold) {
+
+                // Merge cluster j into cluster i
+                G4int totalHits = clusters[i].hits.size() + clusters[j].hits.size();
+                clusters[i].position = (clusters[i].position * clusters[i].hits.size() + clusters[j].position * clusters[j].hits.size()) / totalHits;
+                clusters[i].energyDeposit += clusters[j].energyDeposit;
+                clusters[i].time = (clusters[i].time * clusters[i].hits.size() + clusters[j].time * clusters[j].hits.size()) / totalHits;
+                clusters[i].hits.insert(clusters[i].hits.end(), clusters[j].hits.begin(), clusters[j].hits.end());
+
+                // Remove cluster j
+                clusters.erase(clusters.begin() + j);
+            } else {
+                ++j; // Only increment if no merge
+            }
         }
     }
 

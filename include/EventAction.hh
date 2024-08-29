@@ -30,6 +30,7 @@
 #ifndef EventAction_h
 #define EventAction_h 1
 
+#include "EventActionMessenger.hh"
 #include "G4UserEventAction.hh"
 #include "G4ThreeVector.hh"	
 #include "G4String.hh"
@@ -61,7 +62,7 @@ class EventAction : public G4UserEventAction
 {
   public:
     EventAction();
-    ~EventAction() override = default;
+    ~EventAction();
 
     void BeginOfEventAction(const G4Event* event);// override;
     void EndOfEventAction(const G4Event* event);// override;
@@ -76,7 +77,14 @@ class EventAction : public G4UserEventAction
     void AnalyzeHits(const G4Event* event);
     void ResetVariables();
 
+    void SetSpatialThreshold(G4double value) { fSpatialThreshold = value; }
+    void SetTimeThreshold(G4double value) { fTimeThreshold = value; }
+
   private:
+
+    G4double fSpatialThreshold;  // Spatial threshold for clustering
+    G4double fTimeThreshold;     // Time threshold for clustering
+
     //
     // functions for hit clustering
     //
@@ -108,6 +116,9 @@ class EventAction : public G4UserEventAction
     //static std::mutex mtx; // Mutex for thread safety
     std::vector<G4String> fHitsCollectionNames;
     G4int verbosityLevel=0;
+
+  protected:
+    EventActionMessenger* fMessenger;
 };
 
 }

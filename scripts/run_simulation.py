@@ -142,6 +142,8 @@ def generate_mac_file(settings, path_manager, beam_on, random_seed1, job_id):
         innerCryostatWallThickness=settings["innerCryostatWallThickness"],
         fiducialRadius=settings["fiducialRadius"],
         fiducialHeight=settings["fiducialHeight"],
+        spatialThreshold=settings["spatialThreshold"],
+        timeThreshold=settings["timeThreshold"],
         gpsCommands=gps_commands,
         outputFileName=os.path.join(path_manager.output_dir, f"{settings['outputFileName']}_{job_id}"),
         numEvents=beam_on,

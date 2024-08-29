@@ -8,6 +8,8 @@
     "innerCryostatWallThickness": "6 mm",
     "fiducialRadius": "11.4 cm",
     "fiducialHeight": "13.8 cm",
+    "spatialThreshold": "2.5 cm",
+    "timeThreshold": "10 ns",
     "gpsSettings": {
         "particle": "ion",
         "ion": "11 22",
