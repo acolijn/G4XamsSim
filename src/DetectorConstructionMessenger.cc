@@ -17,42 +17,6 @@ DetectorConstructionMessenger::DetectorConstructionMessenger(DetectorConstructio
     G4UIdirectory* dir = new G4UIdirectory("/detector/");
     dir->SetGuidance("UI commands for the detector setup");
 
-    fOuterCryostatRadiusCmd = new G4UIcmdWithADoubleAndUnit("/detector/setOuterCryostatRadius", this);
-    fOuterCryostatRadiusCmd->SetGuidance("Set the radius of the outer cryostat");
-    fOuterCryostatRadiusCmd->SetParameterName("Radius", false);
-    fOuterCryostatRadiusCmd->SetUnitCategory("Length");
-    fOuterCryostatRadiusCmd->SetDefaultValue(1.3 * m);
-
-    fOuterCryostatHeightCmd = new G4UIcmdWithADoubleAndUnit("/detector/setOuterCryostatHeight", this);
-    fOuterCryostatHeightCmd->SetGuidance("Set the height of the outer cryostat");
-    fOuterCryostatHeightCmd->SetParameterName("Height", false);
-    fOuterCryostatHeightCmd->SetUnitCategory("Length");
-    fOuterCryostatHeightCmd->SetDefaultValue(2.0 * m);
-
-    fOuterCryostatWallThicknessCmd = new G4UIcmdWithADoubleAndUnit("/detector/setOuterCryostatWallThickness", this);
-    fOuterCryostatWallThicknessCmd->SetGuidance("Set the wall thickness of the outer cryostat");
-    fOuterCryostatWallThicknessCmd->SetParameterName("Thickness", false);
-    fOuterCryostatWallThicknessCmd->SetUnitCategory("Length");
-    fOuterCryostatWallThicknessCmd->SetDefaultValue(1 * cm);
-
-    fInnerCryostatRadiusCmd = new G4UIcmdWithADoubleAndUnit("/detector/setInnerCryostatRadius", this);
-    fInnerCryostatRadiusCmd->SetGuidance("Set the radius of the inner cryostat");
-    fInnerCryostatRadiusCmd->SetParameterName("Radius", false);
-    fInnerCryostatRadiusCmd->SetUnitCategory("Length");
-    fInnerCryostatRadiusCmd->SetDefaultValue(1.2 * m);
-
-    fInnerCryostatHeightCmd = new G4UIcmdWithADoubleAndUnit("/detector/setInnerCryostatHeight", this);
-    fInnerCryostatHeightCmd->SetGuidance("Set the height of the inner cryostat");
-    fInnerCryostatHeightCmd->SetParameterName("Height", false);
-    fInnerCryostatHeightCmd->SetUnitCategory("Length");
-    fInnerCryostatHeightCmd->SetDefaultValue(1.8 * m);
-
-    fInnerCryostatWallThicknessCmd = new G4UIcmdWithADoubleAndUnit("/detector/setInnerCryostatWallThickness", this);
-    fInnerCryostatWallThicknessCmd->SetGuidance("Set the wall thickness of the inner cryostat");
-    fInnerCryostatWallThicknessCmd->SetParameterName("Thickness", false);
-    fInnerCryostatWallThicknessCmd->SetUnitCategory("Length");
-    fInnerCryostatWallThicknessCmd->SetDefaultValue(0.5 * cm);
-
     fFiducialRadiusCmd = new G4UIcmdWithADoubleAndUnit("/detector/setFiducialRadius", this);
     fFiducialRadiusCmd->SetGuidance("Set the radius of the fiducial volume");
     fFiducialRadiusCmd->SetParameterName("Radius", false);

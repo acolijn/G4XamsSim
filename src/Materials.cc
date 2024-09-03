@@ -54,6 +54,12 @@ void Materials::DefineMaterials()
     // https://xe1t-wiki.lngs.infn.it/doku.php?id=xenon:xenon1t:analysis:sciencerun1:sc_summary
     LXe->AddElement(Xe, 1);
 
+        //==== Liquid Xenon ====
+    G4Material *GXe = new G4Material("GXe", 0.015 * g / cm3, 1, kStateGas,
+                                       177.05 * kelvin, 1.5 * atmosphere);
+    GXe->AddElement(Xe, 1);
+
+
     //==== Vacuum ====
     G4cout << "Materials::DefineMaterials: Vacuum" << G4endl;
     G4Material *Vacuum = new G4Material("Vacuum", 1.e-25 * g / cm3, 2, kStateGas);

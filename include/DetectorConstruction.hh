@@ -32,6 +32,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "DetectorConstructionMessenger.hh"
+#include "G4UnionSolid.hh"
 #include "Materials.hh"
 #include "globals.hh"
 
@@ -54,7 +55,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void ConstructWorld();
     void ConstructOuterCryostat();
     void ConstructInnerCryostat();    
+    void ConstructGXe();
     void ConstructLXe();
+    void ConstructTPC();
+
     void ConstructFiducialVolume();
     void DefineSensitiveDetector();
 
@@ -69,6 +73,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetFiducialRadius(G4double radius) { fiducial_radius = radius; }
     void SetFiducialHeight(G4double height) { fiducial_height = height; }
 
+    G4UnionSolid* InnerVessel();
+    G4UnionSolid* OuterVessel();
+
   private:
     Materials *fMaterials = nullptr;
 
@@ -79,10 +86,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double outer_cryostat_radius;
     G4double outer_cryostat_height;
     G4double outer_cryostat_wall_thickness;
+    G4double outer_cryostat_flange_radius;
+    G4double outer_cryostat_flange_thickness;
 
     G4double inner_cryostat_radius;
     G4double inner_cryostat_height;
     G4double inner_cryostat_wall_thickness;
+    G4double inner_cryostat_flange_radius;
+    G4double inner_cryostat_flange_thickness;
+
+    G4double cryostat_z_offset;
 
     G4double fiducial_radius;
     G4double fiducial_height;
@@ -92,6 +105,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* fOuterCryostatLogical = nullptr;
     G4LogicalVolume* fVacuumLogical = nullptr;
     G4LogicalVolume* fInnerCryostatLogical = nullptr;
+    G4LogicalVolume* fGXeLogical = nullptr;
+    G4LogicalVolume* fPTFECupLogical = nullptr;
+    G4LogicalVolume* fPTFECylinderLogical = nullptr;
+
     G4LogicalVolume* fLXeLogical = nullptr;
     G4LogicalVolume* fPTFELogical = nullptr;
     G4LogicalVolume* fLXeFiducialLogical = nullptr;
@@ -102,6 +119,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* fVacuumPhysical = nullptr;
     G4VPhysicalVolume* fInnerCryostatPhysical = nullptr;
     G4VPhysicalVolume* fLXePhysical = nullptr;
+    G4VPhysicalVolume* fGXePhysical = nullptr;
+    G4VPhysicalVolume* fPTFECupPhysical = nullptr;
+    G4VPhysicalVolume* fPTFECylinderPhysical = nullptr;f
+
     G4VPhysicalVolume* fPTFEPhysical = nullptr;
     G4VPhysicalVolume* fLXeFiducialPhysical = nullptr;
 

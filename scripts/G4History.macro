@@ -1,22 +1,17 @@
 /run/verbose 0
 /tracking/verbose 0
-/detector/setOuterCryostatRadius 15 cm
-/detector/setOuterCryostatHeight 20 cm
-/detector/setOuterCryostatWallThickness 6 mm
-/detector/setInnerCryostatRadius 12 cm
-/detector/setInnerCryostatHeight 15 cm
-/detector/setInnerCryostatWallThickness 6 mm
-/detector/setFiducialRadius 11.4 cm
-/detector/setFiducialHeight 13.8 cm
+/detector/setFiducialRadius 1. cm
+/detector/setFiducialHeight 1. cm
 /run/initialize
-/gps/particle ion
-/gps/ion 11 22
+/gps/particle geantino
 /gps/pos/type Point
-/gps/pos/centre 12. 0. 0. cm
-/gps/ang/type iso
-/random/setSeeds 782523 782524
-/run/setOutputFileName /data/xenon/acolijn/G4XamsSim/20240828_162827/na22_0
+/gps/pos/centre 0. 0. 25. cm
+/gps/direction 0. 0. -1.
+/event/spatialThreshold 2.5 cm
+/event/timeThreshold 10 ns
+/random/setSeeds 474296 474297
+/run/setOutputFileName /data/xenon/acolijn/G4XamsSim/20240902_193949/point_0
 /run/printProgress 10000
-/run/beamOn 10000
+/run/beamOn 1
 /analysis/h1/getVector
 /analysis/h2/getVector

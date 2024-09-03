@@ -134,12 +134,6 @@ def generate_mac_file(settings, path_manager, beam_on, random_seed1, job_id):
     # Substitute placeholders in the template with actual settings
     mac_content = template.format(
         verbose=settings["verbose"],
-        outerCryostatRadius=settings["outerCryostatRadius"],
-        outerCryostatHeight=settings["outerCryostatHeight"],
-        outerCryostatWallThickness=settings["outerCryostatWallThickness"],
-        innerCryostatRadius=settings["innerCryostatRadius"],
-        innerCryostatHeight=settings["innerCryostatHeight"],
-        innerCryostatWallThickness=settings["innerCryostatWallThickness"],
         fiducialRadius=settings["fiducialRadius"],
         fiducialHeight=settings["fiducialHeight"],
         spatialThreshold=settings["spatialThreshold"],

@@ -4,13 +4,6 @@
 /tracking/verbose {verbose}
 
 # define the detector geometry
-/detector/setOuterCryostatRadius {outerCryostatRadius}
-/detector/setOuterCryostatHeight {outerCryostatHeight}
-/detector/setOuterCryostatWallThickness {outerCryostatWallThickness}
-
-/detector/setInnerCryostatRadius {innerCryostatRadius}
-/detector/setInnerCryostatHeight {innerCryostatHeight}
-/detector/setInnerCryostatWallThickness {innerCryostatWallThickness}
 
 /detector/setFiducialRadius {fiducialRadius}
 /detector/setFiducialHeight {fiducialHeight}

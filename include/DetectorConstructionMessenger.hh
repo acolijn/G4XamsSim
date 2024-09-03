@@ -20,12 +20,6 @@ class DetectorConstructionMessenger : public G4UImessenger {
     private:
         DetectorConstruction* fDetectorConstruction;
 
-        G4UIcmdWithADoubleAndUnit* fOuterCryostatRadiusCmd;
-        G4UIcmdWithADoubleAndUnit* fOuterCryostatHeightCmd;
-        G4UIcmdWithADoubleAndUnit* fOuterCryostatWallThicknessCmd;
-        G4UIcmdWithADoubleAndUnit* fInnerCryostatRadiusCmd;
-        G4UIcmdWithADoubleAndUnit* fInnerCryostatHeightCmd;
-        G4UIcmdWithADoubleAndUnit* fInnerCryostatWallThicknessCmd;
         G4UIcmdWithADoubleAndUnit* fFiducialRadiusCmd;
         G4UIcmdWithADoubleAndUnit* fFiducialHeightCmd;
 };

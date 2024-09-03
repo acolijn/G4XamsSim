@@ -1,11 +1,5 @@
 {
     "verbose": 0,
-    "outerCryostatRadius": "15 cm",
-    "outerCryostatHeight": "20 cm",
-    "outerCryostatWallThickness": "6 mm",
-    "innerCryostatRadius": "12 cm",
-    "innerCryostatHeight": "15 cm",
-    "innerCryostatWallThickness": "6 mm",
     "fiducialRadius": "11.4 cm",
     "fiducialHeight": "13.8 cm",
     "spatialThreshold": "2.5 cm",

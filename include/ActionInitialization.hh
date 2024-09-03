@@ -32,6 +32,8 @@
 
 #include "G4VUserActionInitialization.hh"
 #include "EventAction.hh"
+#include "RunAction.hh"
+#include "SteppingAction.hh"
 
 /// Action initialization class.
 

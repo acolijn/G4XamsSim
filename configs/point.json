@@ -1,0 +1,15 @@
+{
+    "verbose": 0,
+    "fiducialRadius": "1. cm",
+    "fiducialHeight": "1. cm",
+    "spatialThreshold": "2.5 cm",
+    "timeThreshold": "10 ns",
+    "gpsSettings": {
+        "particle": "geantino",
+        "posType": "Point",	
+        "posCentre": "0. 0. 25. cm",
+        "direction": "0. 0. -1."
+    },
+    "outputFileName": "point",
+    "printProgress": 10000
+}

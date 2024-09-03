@@ -33,6 +33,7 @@
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "EventAction.hh"
+#include "SteppingAction.hh"
 
 namespace G4XamsSim
 {
@@ -61,6 +62,9 @@ void ActionInitialization::Build() const
 
   auto runAction = new RunAction(eventAction);
   SetUserAction(runAction);
+
+  auto steppingAction = new SteppingAction(eventAction);
+  SetUserAction(steppingAction);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
