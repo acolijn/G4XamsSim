@@ -26,7 +26,7 @@ EventAction::EventAction() : G4UserEventAction(),
   G4RunManager::GetRunManager()->SetPrintProgress(1);
 
   //fHitsCollectionNames.push_back("LXeCollection");
-  fHitsCollectionNames.push_back("LXeFiducialCollection");
+  //fHitsCollectionNames.push_back("LXeFiducialCollection");
 
   fMessenger = new EventActionMessenger(this);
 }
@@ -35,6 +35,11 @@ EventAction::~EventAction() {
   delete fMessenger;
 }
 
+
+void EventAction::AddHitsCollectionName(const G4String& name) {
+    G4cout << "EventAction::AddHitsCollectionName: " << name << G4endl;
+    fHitsCollectionNames.push_back(name);
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event* event)

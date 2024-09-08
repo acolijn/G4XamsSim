@@ -79,6 +79,7 @@ class EventAction : public G4UserEventAction
 
     void SetSpatialThreshold(G4double value) { fSpatialThreshold = value; }
     void SetTimeThreshold(G4double value) { fTimeThreshold = value; }
+    void AddHitsCollectionName(const G4String& name);
 
   private:
 

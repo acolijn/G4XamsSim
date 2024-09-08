@@ -1,0 +1,17 @@
+{
+    "verbose": 0,
+    "geometry_settings": {
+        "geometryFileName": "/user/z37/g4/G4XamsSim/run/configs/geometry.json"
+    },
+    "gps_settings": {
+        "particle": "ion",
+        "ion": "11 22",
+        "posType": "Point",
+        "posCentre": "12. 0. 0. cm",
+        "angType": "iso"
+    },
+    "run_settings": {
+        "outputFileName": "na22",
+        "printProgress": 10000
+    }
+}

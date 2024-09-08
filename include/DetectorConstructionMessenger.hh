@@ -3,6 +3,7 @@
 
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
 #include "globals.hh"
 
 
@@ -19,9 +20,7 @@ class DetectorConstructionMessenger : public G4UImessenger {
 
     private:
         DetectorConstruction* fDetectorConstruction;
-
-        G4UIcmdWithADoubleAndUnit* fFiducialRadiusCmd;
-        G4UIcmdWithADoubleAndUnit* fFiducialHeightCmd;
+        G4UIcmdWithAString* fGeometryFileNameCmd;  // New command to set geometry file name
 };
 
 }
