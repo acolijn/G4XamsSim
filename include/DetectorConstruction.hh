@@ -23,118 +23,61 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
 /// \file B1/include/DetectorConstruction.hh
-/// \brief Definition of the B1::DetectorConstruction class
+/// \brief Definition of the G4XamsSim::DetectorConstruction class
 
-#ifndef __DetectorConstruction__
-#define __DetectorConstruction__ 1
+#ifndef DETECTOR_CONSTRUCTION_HH
+#define DETECTOR_CONSTRUCTION_HH
 
 #include "G4VUserDetectorConstruction.hh"
+#include "G4LogicalVolume.hh"
+#include "G4PVPlacement.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VSolid.hh"
 #include "DetectorConstructionMessenger.hh"
-#include "G4UnionSolid.hh"
 #include "Materials.hh"
-#include "globals.hh"
 
-class G4VPhysicalVolume;
-class G4LogicalVolume;
-class DetectorConstructionMessenger;
+#include "nlohmann/json.hpp"
 
-/// Detector construction class to define materials and geometry.
+#include <map>
+#include <string>
 
-namespace G4XamsSim
-{
+namespace G4XamsSim {
 
-class DetectorConstruction : public G4VUserDetectorConstruction
-{
-  public:
+class DetectorConstruction : public G4VUserDetectorConstruction {
+public:
     DetectorConstruction();
-    ~DetectorConstruction();//override = default;
+    ~DetectorConstruction() override;
 
     G4VPhysicalVolume* Construct() override;
-    void ConstructWorld();
-    void ConstructOuterCryostat();
-    void ConstructInnerCryostat();    
-    void ConstructGXe();
-    void ConstructLXe();
-    void ConstructTPC();
+        
+    // set the JSON geometry file name
+    void SetGeometryFileName(const std::string& fileName);
 
-    void ConstructFiducialVolume();
-    void DefineSensitiveDetector();
+private:
+    void LoadGeometryFromJson(const std::string& jsonFileName);
+    void MakeVolumeSensitive(const G4String& volumeName, const G4String& collectionName);
+    G4LogicalVolume* ConstructVolume(const nlohmann::json& volumeDef);
+    G4VSolid* CreateSolid(const nlohmann::json& solidDef);
+    G4LogicalVolume* GetLogicalVolume(const G4String& name);
 
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    // Maps to store logical and physical volumes for easy lookup
+    std::map<G4String, G4LogicalVolume*> logicalVolumeMap;
+    std::map<G4String, G4VPhysicalVolume*> physicalVolumeMap;
 
-    void SetOuterCryostatRadius(G4double radius) { outer_cryostat_radius = radius; }
-    void SetOuterCryostatHeight(G4double height) { outer_cryostat_height = height; }
-    void SetOuterCryostatWallThickness(G4double thickness) { outer_cryostat_wall_thickness = thickness; }
-    void SetInnerCryostatRadius(G4double radius) { inner_cryostat_radius = radius; }
-    void SetInnerCryostatHeight(G4double height) { inner_cryostat_height = height; }
-    void SetInnerCryostatWallThickness(G4double thickness) { inner_cryostat_wall_thickness = thickness; }
-    void SetFiducialRadius(G4double radius) { fiducial_radius = radius; }
-    void SetFiducialHeight(G4double height) { fiducial_height = height; }
+    // World physical and logical volumes
+    G4LogicalVolume* fWorldLogical = nullptr;
+    G4VPhysicalVolume* fWorldPhysical = nullptr;
 
-    G4UnionSolid* InnerVessel();
-    G4UnionSolid* OuterVessel();
-
-  private:
+    // Flag to check overlaps
+    G4bool fCheckOverlaps = true;
     Materials *fMaterials = nullptr;
 
-    // check for overlaps
-    G4bool fCheckOverlaps = true;
-
-    //dimensions
-    G4double outer_cryostat_radius;
-    G4double outer_cryostat_height;
-    G4double outer_cryostat_wall_thickness;
-    G4double outer_cryostat_flange_radius;
-    G4double outer_cryostat_flange_thickness;
-
-    G4double inner_cryostat_radius;
-    G4double inner_cryostat_height;
-    G4double inner_cryostat_wall_thickness;
-    G4double inner_cryostat_flange_radius;
-    G4double inner_cryostat_flange_thickness;
-
-    G4double cryostat_z_offset;
-
-    G4double fiducial_radius;
-    G4double fiducial_height;
-
-    //logical volumes
-    G4LogicalVolume* fWorldLogical = nullptr;
-    G4LogicalVolume* fOuterCryostatLogical = nullptr;
-    G4LogicalVolume* fVacuumLogical = nullptr;
-    G4LogicalVolume* fInnerCryostatLogical = nullptr;
-    G4LogicalVolume* fGXeLogical = nullptr;
-    G4LogicalVolume* fPTFECupLogical = nullptr;
-    G4LogicalVolume* fPTFECylinderLogical = nullptr;
-
-    G4LogicalVolume* fLXeLogical = nullptr;
-    G4LogicalVolume* fPTFELogical = nullptr;
-    G4LogicalVolume* fLXeFiducialLogical = nullptr;
-
-    //physical volumes
-    G4VPhysicalVolume* fWorldPhysical = nullptr;
-    G4VPhysicalVolume* fOuterCryostatPhysical = nullptr;
-    G4VPhysicalVolume* fVacuumPhysical = nullptr;
-    G4VPhysicalVolume* fInnerCryostatPhysical = nullptr;
-    G4VPhysicalVolume* fLXePhysical = nullptr;
-    G4VPhysicalVolume* fGXePhysical = nullptr;
-    G4VPhysicalVolume* fPTFECupPhysical = nullptr;
-    G4VPhysicalVolume* fPTFECylinderPhysical = nullptr;f
-
-    G4VPhysicalVolume* fPTFEPhysical = nullptr;
-    G4VPhysicalVolume* fLXeFiducialPhysical = nullptr;
-
-  protected:
-    G4LogicalVolume* fScoringVolume = nullptr;
+    std::string jsonFileName;
 
     DetectorConstructionMessenger* fMessenger;
-
 };
 
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+}  // namespace G4XamsSim
 
 #endif

@@ -1,0 +1,15 @@
+/run/verbose 0
+/tracking/verbose 0
+/detector/setGeometryFileName /user/z37/g4/G4XamsSim/geometry.json
+/run/initialize
+/gps/particle gamma
+/gps/energy 1.0 MeV
+/gps/pos/type Point
+/gps/pos/centre 25. 0. 0. cm
+/gps/direction -1. 0. 0.
+/event/spatialThreshold 2.5 cm
+/event/timeThreshold 10 ns
+/random/setSeeds 52589 52590
+/run/setOutputFileName /data/xenon/acolijn/G4XamsSim/20240908_214932/point_0
+/run/printProgress 10000
+/run/beamOn 1000

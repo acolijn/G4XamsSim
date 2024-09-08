@@ -27,7 +27,7 @@ class SteppingAction : public G4UserSteppingAction
 
   private:
     EventAction* fEventAction;
-    G4int verbosityLevel=2;
+    G4int verbosityLevel=0;
 };
 
 }
