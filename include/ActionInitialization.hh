@@ -13,6 +13,16 @@
 namespace G4Sim
 {
 
+/**
+ * @class ActionInitialization
+ * @brief Initializes user actions for the Geant4 simulation.
+ *
+ * This class inherits from G4VUserActionInitialization and is responsible for
+ * setting up the actions that will be used during the simulation. It provides
+ * methods to build actions for both master and worker threads.
+ *
+ * @note The destructor is defined as default.
+ */
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
