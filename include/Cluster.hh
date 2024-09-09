@@ -11,6 +11,12 @@
 /*/
 namespace G4Sim {
 
+/**
+ * @struct Cluster
+ * @brief A struct representing a cluster of hits in the simulation.
+ *
+ * The Cluster struct represents a cluster of hits in the simulation, with a position, energy deposit, time, and a vector of hits.
+ */
 struct Cluster {
     G4ThreeVector position;
     G4double energyDeposit;
