@@ -1,0 +1,9 @@
+pandas
+uproot
+matplotlib
+numpy
+awkward
+sphinx
+breathe
+sphinx-rtd-theme
+-e .

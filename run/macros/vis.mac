@@ -1,10 +1,9 @@
-# Macro file for the visualization setting in the initialization phase 
-# of the B1 example when running in interactive mode
-#
-# define the detector geometry
+/control/verbose 0
+/run/verbose 0
+/tracking/verbose 0
 
-/detector/setFiducialRadius 1 cm
-/detector/setFiducialHeight 2 cm
+# define the detector geometry
+/detector/setGeometryFileName /user/z37/g4/G4XamsSim/run/configs/geometry.json
 
 /run/initialize
 
@@ -136,7 +135,8 @@
 /vis/geometry/set/visibility Vacuum 0 false
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
-/vis/viewer/set/viewpointThetaPhi 90 180
+#/vis/viewer/set/viewpointThetaPhi 90 -60
+/vis/viewer/set/upVector 0 0 1
 
 #
 # Re-establish auto refreshing and verbosity:

@@ -163,6 +163,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
  * @param event The G4Event object representing the current event.
  */
 void EventAction::AnalyzeHits(const G4Event* event) {
+
+  // Get hits collections
   G4HCofThisEvent* HCE = event->GetHCofThisEvent();
   if (!HCE) {
       G4ExceptionDescription msg;
@@ -173,10 +175,10 @@ void EventAction::AnalyzeHits(const G4Event* event) {
 
   std::vector<Hit*> allHits;
 
+  // Loop over hits collections
   for (size_t i = 0; i < fHitsCollectionNames.size(); ++i) {
       G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(fHitsCollectionNames[i]);
       auto *fHitsCollection = static_cast<HitsCollection*>(HCE->GetHC(hcID));
-      
       if (!fHitsCollection) continue;
 
       G4int n_hit = fHitsCollection->entries();
