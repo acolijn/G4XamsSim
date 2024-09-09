@@ -47,7 +47,11 @@
 
 #include <cmath>
 
-namespace G4XamsSim{
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim{
 /**
  * @file RunAction.cc
  * @brief Implementation of the RunAction class.
@@ -60,6 +64,11 @@ namespace G4XamsSim{
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief Constructs a RunAction object with the given eventAction.
+ * 
+ * @param eventAction The EventAction object associated with this RunAction.
+ */
 RunAction::RunAction(EventAction* eventAction)
   : fEventAction(eventAction)
 {
@@ -74,6 +83,15 @@ RunAction::RunAction(EventAction* eventAction)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief This function is called at the beginning of each run.
+ * 
+ * It retrieves the initial energy from the primary generator action and prints it to the console.
+ * 
+ * It also initializes the analysis manager and ntuples.
+ * 
+ * @param run Pointer to the G4Run object representing the current run.
+ */
 void RunAction::BeginOfRunAction(const G4Run*)
 {
 
@@ -96,6 +114,17 @@ RunAction::~RunAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief Initializes the analysis manager and creates event data ntuple.
+ * 
+ * This function initializes the analysis manager and sets the default file type to "root".
+ * It opens the output file specified by `fOutputFileName`.
+ * The verbose level is set to 1.
+ * Ntuple merging is enabled.
+ * Finally, it calls the `DefineEventNtuple()` function to create the event data ntuple.
+ * 
+ * @note This function should be called only in the master thread.
+ */
 void RunAction::InitializeNtuples(){
 
   // Get analysis manager
@@ -148,6 +177,12 @@ void RunAction::DefineEventNtuple(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief This function is called at the end of a run.
+ * It saves histograms and ntuple if the current thread is the master thread.
+ * 
+ * @param run Pointer to the G4Run object representing the current run.
+ */
 void RunAction::EndOfRunAction(const G4Run* run)
 {
 
@@ -163,4 +198,4 @@ void RunAction::EndOfRunAction(const G4Run* run)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-}
+} // namespace G4Sim

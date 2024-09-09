@@ -5,8 +5,23 @@
 #include "G4THitsCollection.hh"
 #include "Hit.hh" // Include the Hit class
 
-namespace G4XamsSim {
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
+/**
+ * @class SensitiveDetector
+ * 
+ * @brief This class represents a sensitive detector in the simulation.
+ * 
+ * The SensitiveDetector class is derived from the G4VSensitiveDetector class and is responsible for handling hits and energy deposits in the simulation.
+ * It provides methods for initializing the detector, processing hits, and ending the event.
+ * The class also includes a method to retrieve the total energy deposit.
+ * 
+ * @note This class assumes the existence of a HitsCollection class and a Hit class.
+ */
 class SensitiveDetector : public G4VSensitiveDetector {
 public:
     SensitiveDetector(const G4String& name, const G4String& hitsCollectionName);
@@ -25,6 +40,6 @@ private:
     G4int fHitsCollectionID;
 };
 
-}
+} // namespace G4Sim
 
 #endif

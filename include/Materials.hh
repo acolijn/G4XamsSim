@@ -1,9 +1,21 @@
 #ifndef __MATERIALS_HH__
 #define __MATERIALS_HH__
 
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
-namespace G4XamsSim {
-
+/**
+ * @class Materials
+ * @brief A class for defining materials using the G4NistManager.
+ *
+ * The Materials class provides a way to define materials using the G4NistManager, which is a G4MaterialDatabase.
+ * It is a singleton class, meaning that there is only one instance of it in the program.
+ * The G4NistManager can be accessed by calling the static method G4NistManager::Instance().
+ * The class provides a method called DefineMaterials() to define materials.
+ */
 class Materials {
     //
     // Materials

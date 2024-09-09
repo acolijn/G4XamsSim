@@ -19,7 +19,7 @@
 
 //#include "TTree.h"
 
-using namespace G4XamsSim;
+using namespace G4Sim;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)

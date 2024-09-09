@@ -42,8 +42,23 @@
 #include <map>
 #include <string>
 
-namespace G4XamsSim {
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
+/**
+ * @class DetectorConstruction
+ * @brief Class for constructing the detector geometry.
+ *
+ * This class inherits from G4VUserDetectorConstruction and is responsible for constructing the detector geometry.
+ * It defines methods for constructing the physical volume, setting the JSON geometry file name, loading the geometry from a JSON file,
+ * making a volume sensitive, constructing a logical volume, creating a solid, and getting a logical volume.
+ * The class also contains maps to store logical and physical volumes for easy lookup, as well as the world physical and logical volumes.
+ * It has a flag to check for overlaps and a pointer to the Materials class.
+ * The class also has a member variable to store the JSON file name and a pointer to the DetectorConstructionMessenger class.
+ */
 class DetectorConstruction : public G4VUserDetectorConstruction {
 public:
     DetectorConstruction();

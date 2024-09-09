@@ -8,7 +8,7 @@
 #include "G4VProcess.hh"
 #include "G4ProcessType.hh"
 
-namespace G4XamsSim
+namespace G4Sim
 {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -61,4 +61,4 @@ void SteppingAction::Print(const G4Step* step) {
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-} // namespace G4FastSim
+} // namespace G4Sim

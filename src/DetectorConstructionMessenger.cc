@@ -5,7 +5,11 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4SystemOfUnits.hh"
 
-namespace G4XamsSim{
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim{
 
 /**
  * @brief Constructor for the DetectorConstructionMessenger class.
