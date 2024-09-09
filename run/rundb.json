@@ -2,28 +2,15 @@
     "runs": [
         {
             "id": "run_01",
-            "particle": "gamma",
-            "energy": "1. MeV",
-            "sourceVolume": "",
-            "outputDir": "/data/xenon/acolijn/G4XamsSim/20240908_223304",
-            "outputFile": "pencil",
-            "numEvents": 100000,
-            "numJobs": 1,
-            "randomSeed": 392911,
-            "settingsFile": "settings.json",
-            "status": "active"
-        },
-        {
-            "id": "run_02",
             "particle": "ion",
             "ion": "11 22",
             "energy": "None",
             "sourceVolume": "",
-            "outputDir": "/data/xenon/acolijn/G4XamsSim/20240908_224725",
+            "outputDir": "/data/xenon/acolijn/G4XamsSim/20240908_225627",
             "outputFile": "na22",
-            "numEvents": 100000,
-            "numJobs": 1,
-            "randomSeed": 98790,
+            "numEvents": 10000000,
+            "numJobs": 10,
+            "randomSeed": 417405,
             "settingsFile": "settings.json",
             "status": "active"
         }
