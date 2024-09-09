@@ -1,32 +1,3 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-/// \file B1/include/EventAction.hh
-/// \brief Definition of the B1::EventAction class
-
 #ifndef EventAction_h
 #define EventAction_h 1
 
@@ -49,7 +20,11 @@ class G4Event;
 class G4HCofThisEvent;
 class G4VHitsCollection;
 
-namespace G4XamsSim
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim
 {
 
 // Use enum to define the constants
@@ -58,6 +33,20 @@ enum EventType {
     SCATTERED_GAMMA = 1
 };
 
+/**
+ * @class EventAction
+ * @brief Event action class for handling events in the simulation.
+ *
+ * This class inherits from G4UserEventAction and provides methods for handling the beginning and end of events,
+ * analyzing hits, and resetting variables. It also provides getter and setter methods for accessing event data.
+ * The class includes functions for hit clustering and calculating distances and time differences.
+ *
+ * The variables stored for each event in the ntuple tree include the logarithm of the weight, energy deposition,
+ * number of clusters, number of photons, number of components, event ID, event type, and position coordinates.
+ * The class also includes vectors for storing energy deposition, position coordinates, and weights.
+ *
+ * The class uses a mutex for thread safety and includes a messenger for setting event action properties.
+ */
 class EventAction : public G4UserEventAction
 {
   public:
@@ -89,7 +78,7 @@ class EventAction : public G4UserEventAction
     //
     // functions for hit clustering
     //
-    void ClusterHits(std::vector<G4XamsSim::Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters);
+    void ClusterHits(std::vector<G4Sim::Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters);
 
     G4double CalculateDistance(const G4ThreeVector& pos1, const G4ThreeVector& pos2);
     G4double CalculateTimeDifference(G4double time1, G4double time2);

@@ -41,12 +41,25 @@ class G4Run;
 
 /// Run action class
 
-namespace G4XamsSim
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim
 {
 
 class EventAction;
 class RunActionMessenger;
 
+/**
+ * @class RunAction
+ * @brief User-defined run action class.
+ *
+ * This class inherits from G4UserRunAction and is responsible for defining the actions to be taken at the beginning and end of a run.
+ * It also provides methods for initializing and defining event ntuples, as well as setting the output file name.
+ *
+ * @note The default output file name is "G4XamsSim.root".
+ */
 class RunAction : public G4UserRunAction
 {
   public:
@@ -69,7 +82,7 @@ class RunAction : public G4UserRunAction
     G4String fOutputFileName = "G4XamsSim.root";
 };
 
-}
+} // namespace G4Sim
 
 #endif
 

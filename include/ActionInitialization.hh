@@ -37,7 +37,11 @@
 
 /// Action initialization class.
 
-namespace G4XamsSim
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim
 {
 
 class ActionInitialization : public G4VUserActionInitialization

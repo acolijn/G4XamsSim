@@ -7,7 +7,11 @@
 #include "G4String.hh"
 #include "G4THitsCollection.hh"
 
-namespace G4XamsSim {
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
 /**
  * @brief The Hit class represents a hit in the detector.
@@ -68,6 +72,6 @@ inline void Hit::operator delete(void* hit) {
 typedef G4THitsCollection<Hit> HitsCollection;
 
 
-}
+} // namespace G4Sim
 
 #endif

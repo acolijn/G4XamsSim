@@ -28,14 +28,14 @@
 #include <fstream>
 #include <iostream>
 
-using namespace G4XamsSim;
+using namespace G4Sim;
 using json = nlohmann::json;
 
 /**
- * @namespace G4XamsSim
- * @brief Namespace for the G4XamsSim library.
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
 /*/
-namespace G4XamsSim {
+namespace G4Sim {
 
 /**
  * @brief Constructor for the DetectorConstruction class.
@@ -134,7 +134,7 @@ void DetectorConstruction::MakeVolumeSensitive(const G4String& volumeName, const
     G4SDManager* sdManager = G4SDManager::GetSDMpointer();
 
     // Create a new sensitive detector
-    auto* sensitiveDetector = new G4XamsSim::SensitiveDetector(volumeName, collectionName);
+    auto* sensitiveDetector = new G4Sim::SensitiveDetector(volumeName, collectionName);
     sdManager->AddNewDetector(sensitiveDetector);
 
     // Assign the sensitive detector to the corresponding logical volume

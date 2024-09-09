@@ -5,8 +5,11 @@
 #include "G4Element.hh"
 #include "G4SystemOfUnits.hh"
 
-
-namespace G4XamsSim {
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
 Materials::Materials()
 {
@@ -16,6 +19,23 @@ Materials::~Materials()
 {
 }
 
+/**
+ * @brief Defines the materials used in the simulation.
+ *
+ * This function defines various materials such as elements, air, water, liquid xenon, gas xenon, vacuum, PTFE, and stainless steel.
+ * It uses the G4NistManager class to find or build elements and materials.
+ * The density, state, temperature, and pressure of the materials are specified during their creation.
+ * The defined materials are:
+ * - Air: G4_AIR
+ * - Water: G4_WATER
+ * - Liquid Xenon: LXe
+ * - Gas Xenon: GXe
+ * - Vacuum: Vacuum
+ * - PTFE: PTFE
+ * - Stainless Steel: StainlessSteel
+ *
+ * @note The density values and other parameters used in this function are specific to the simulation and may need to be adjusted for different applications.
+ */
 void Materials::DefineMaterials()
 {
     G4cout << "Materials::DefineMaterials" << G4endl;
@@ -80,4 +100,4 @@ void Materials::DefineMaterials()
     G4cout << "Materials::DefineMaterials done" << G4endl;
 }
 
-} // namespace G4FastSim
+} // namespace G4Sim
