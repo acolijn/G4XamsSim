@@ -1,5 +1,3 @@
-/// \file G4FastSim.cc
-/// \brief Main program of the B1 example
 #include "DetectorConstruction.hh"
 #include "DetectorConstructionMessenger.hh"
 #include "ActionInitialization.hh"
@@ -77,7 +75,7 @@ int main(int argc,char** argv)
   }
   else {
     // interactive mode
-    UImanager->ApplyCommand("/control/execute init_vis.mac");
+    UImanager->ApplyCommand("/control/execute vis.mac");
     ui->SessionStart();
     delete ui;
   }
