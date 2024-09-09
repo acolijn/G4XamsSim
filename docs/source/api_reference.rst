@@ -33,10 +33,6 @@ Geant4 code
    :project: G4XamsSim
    :members:
    :private-members:
-   
-.. doxygenclass:: ActionInitialization
-   :project: G4XamsSim
-   :members:
 
 .. doxygenclass:: DetectorConstruction
    :project: G4XamsSim
