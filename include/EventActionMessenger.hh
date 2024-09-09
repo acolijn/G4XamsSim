@@ -15,6 +15,11 @@ namespace G4Sim {
 
 class EventAction;
 
+/**
+ * @class EventActionMessenger
+ * @brief A class responsible for handling user commands related to the event actions.
+ *
+ */
 class EventActionMessenger : public G4UImessenger {
 public:
     EventActionMessenger(EventAction* eventAction);
