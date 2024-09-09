@@ -61,9 +61,9 @@ DetectorConstruction::~DetectorConstruction() {}
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   //const std::string& jsonFileName = "/user/z37/g4/G4XamsSim/geometry.json";
-  G4cout << "Loading geometry from JSON file: " << jsonFileName << G4endl;
+  G4cout << "DetectorConstruction::Construct: Loading geometry from JSON file: " << jsonFileName << G4endl;
   LoadGeometryFromJson(jsonFileName);
-  G4cout << "Geometry loaded successfully!" << G4endl;
+  G4cout << "DetectorConstruction::Construct: Geometry loaded successfully!" << G4endl;
 
   return fWorldPhysical;
 }
@@ -77,7 +77,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
  */
 void DetectorConstruction::SetGeometryFileName(const std::string& fileName) {
     jsonFileName = fileName;
-    G4cout << "JSON file name set to: " << jsonFileName << G4endl;
+    G4cout << "DetectorConstruction::SetGeometryFilename: JSON file name set to: " << jsonFileName << G4endl;
 }
 
 /**
@@ -93,7 +93,7 @@ void DetectorConstruction::LoadGeometryFromJson(const std::string& jsonFileName)
 
     std::ifstream inputFile(jsonFileName);
     if (!inputFile.is_open()) {
-        G4cerr << "Error: Could not open geometry JSON file: " << jsonFileName << G4endl;
+        G4cerr << "DetectorConstruction::LoadGeometryFromJson: Error: Could not open geometry JSON file: " << jsonFileName << G4endl;
         exit(-1);	
     }
 
@@ -166,8 +166,8 @@ G4LogicalVolume* DetectorConstruction::ConstructVolume(const json& volumeDef) {
     G4Material* material = G4Material::GetMaterial(volumeDef["material"].get<std::string>());
     G4LogicalVolume* logicalVolume = nullptr;
 
-    G4cout << "Constructing volume: " << name << G4endl;
-    G4cout << "Material: " << material->GetName() << G4endl;  
+    G4cout << "DetectorConstruction::ConstructVolume: Constructing volume: " << name << G4endl;
+    G4cout << "DetectorConstruction::ConstructVolume: Material: " << material->GetName() << G4endl;  
 
     // Handle compound shapes (e.g., G4UnionSolid)
     if (volumeDef.contains("components")) {
