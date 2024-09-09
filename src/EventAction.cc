@@ -14,7 +14,11 @@
 #include "Hit.hh"
 #include "G4SystemOfUnits.hh"
 
-namespace G4XamsSim {
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim {
 
 //std::mutex EventAction::mtx;
 
@@ -25,9 +29,6 @@ EventAction::EventAction() : G4UserEventAction(),
   // set printing per each event
   G4RunManager::GetRunManager()->SetPrintProgress(1);
 
-  //fHitsCollectionNames.push_back("LXeCollection");
-  fHitsCollectionNames.push_back("LXeFiducialCollection");
-
   fMessenger = new EventActionMessenger(this);
 }
 
@@ -35,8 +36,27 @@ EventAction::~EventAction() {
   delete fMessenger;
 }
 
+
+/**
+ * @brief Adds a hits collection name to the EventAction.
+ * 
+ * This function adds the specified hits collection name to the EventAction's list of hits collection names.
+ * 
+ * @param name The name of the hits collection to be added.
+ */
+void EventAction::AddHitsCollectionName(const G4String& name) {
+    G4cout << "EventAction::AddHitsCollectionName: " << name << G4endl;
+    fHitsCollectionNames.push_back(name);
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief This function is called at the beginning of each event.
+ * 
+ * It resets variables and retrieves information about the primary vertex of the event.
+ * 
+ * @param event Pointer to the G4Event object representing the current event.
+ */
 void EventAction::BeginOfEventAction(const G4Event* event)
 {
   if (verbosityLevel > 0)
@@ -60,7 +80,25 @@ void EventAction::BeginOfEventAction(const G4Event* event)
   }
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+/**
+ * @brief Resets the variables of the EventAction class.
+ *
+ * This function sets all the member variables of the EventAction class to their initial values.
+ * - fEdep: Energy deposition (in MeV).
+ * - fLogWeight: Logarithm of the weight.
+ * - fEventType: Event type.
+ * - fNclusters: Number of clusters.
+ * - fNphot: Number of photons.
+ * - fNcomp: Number of components.
+ * - fXp: X position of the primary particle.
+ * - fYp: Y position of the primary particle.
+ * - fZp: Z position of the primary particle.
+ * - fEd: Vector of energy depositions.
+ * - fX: Vector of X positions.
+ * - fY: Vector of Y positions.
+ * - fZ: Vector of Z positions.
+ * - fW: Vector of weights.
+ */
 void EventAction::ResetVariables() {
   fEdep = 0.0;
   fLogWeight = 0.0;
@@ -80,6 +118,13 @@ void EventAction::ResetVariables() {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief This function is called at the end of each event in the simulation.
+ * It analyzes the hits and clusters, fills the analysis manager's ntuple with relevant data,
+ * and updates the event ID and other variables.
+ * 
+ * @param event Pointer to the current G4Event object.
+ */
 void EventAction::EndOfEventAction(const G4Event* event)
 {
   if(verbosityLevel>0) G4cout << "EventAction::EndOfEventAction..... Analyze hits and cluster...." << G4endl;
@@ -287,4 +332,4 @@ void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold
 }
 
 
-} // namespace G4XamsSim
+} // namespace G4Sim

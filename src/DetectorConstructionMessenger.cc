@@ -2,9 +2,14 @@
 #include "DetectorConstruction.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
 #include "G4SystemOfUnits.hh"
 
-namespace G4XamsSim{
+/**
+ * @namespace G4Sim
+ * @brief Namespace for the G4Sim library.
+/*/
+namespace G4Sim{
 
 /**
  * @brief Constructor for the DetectorConstructionMessenger class.
@@ -17,28 +22,15 @@ DetectorConstructionMessenger::DetectorConstructionMessenger(DetectorConstructio
     G4UIdirectory* dir = new G4UIdirectory("/detector/");
     dir->SetGuidance("UI commands for the detector setup");
 
-    fFiducialRadiusCmd = new G4UIcmdWithADoubleAndUnit("/detector/setFiducialRadius", this);
-    fFiducialRadiusCmd->SetGuidance("Set the radius of the fiducial volume");
-    fFiducialRadiusCmd->SetParameterName("Radius", false);
-    fFiducialRadiusCmd->SetUnitCategory("Length");
-    fFiducialRadiusCmd->SetDefaultValue(0.8 * m);
-
-    fFiducialHeightCmd = new G4UIcmdWithADoubleAndUnit("/detector/setFiducialHeight", this);
-    fFiducialHeightCmd->SetGuidance("Set the height of the fiducial volume");
-    fFiducialHeightCmd->SetParameterName("Height", false);
-    fFiducialHeightCmd->SetUnitCategory("Length");
-    fFiducialHeightCmd->SetDefaultValue(1.0 * m);
+    fGeometryFileNameCmd = new G4UIcmdWithAString("/detector/setGeometryFileName", this);
+    fGeometryFileNameCmd->SetGuidance("Set the geometry JSON file name.");
+    fGeometryFileNameCmd->SetParameterName("fileName", false);
+    fGeometryFileNameCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
+
 DetectorConstructionMessenger::~DetectorConstructionMessenger() {
-    delete fOuterCryostatRadiusCmd;
-    delete fOuterCryostatHeightCmd;
-    delete fOuterCryostatWallThicknessCmd;
-    delete fInnerCryostatRadiusCmd;
-    delete fInnerCryostatHeightCmd;
-    delete fInnerCryostatWallThicknessCmd;
-    delete fFiducialRadiusCmd;
-    delete fFiducialHeightCmd;
+    delete fGeometryFileNameCmd;
 }
 
 /**
@@ -52,23 +44,9 @@ DetectorConstructionMessenger::~DetectorConstructionMessenger() {
  */
 void DetectorConstructionMessenger::SetNewValue(G4UIcommand* command, G4String newValue) {
 
-    if (command == fOuterCryostatRadiusCmd) {
-        fDetectorConstruction->SetOuterCryostatRadius(fOuterCryostatRadiusCmd->GetNewDoubleValue(newValue));
-    } else if (command == fOuterCryostatHeightCmd) {
-        fDetectorConstruction->SetOuterCryostatHeight(fOuterCryostatHeightCmd->GetNewDoubleValue(newValue));
-    } else if (command == fOuterCryostatWallThicknessCmd) {
-        fDetectorConstruction->SetOuterCryostatWallThickness(fOuterCryostatWallThicknessCmd->GetNewDoubleValue(newValue));
-    } else if (command == fInnerCryostatRadiusCmd) {
-        fDetectorConstruction->SetInnerCryostatRadius(fInnerCryostatRadiusCmd->GetNewDoubleValue(newValue));
-    } else if (command == fInnerCryostatHeightCmd) {
-        fDetectorConstruction->SetInnerCryostatHeight(fInnerCryostatHeightCmd->GetNewDoubleValue(newValue));
-    } else if (command == fInnerCryostatWallThicknessCmd) {
-        fDetectorConstruction->SetInnerCryostatWallThickness(fInnerCryostatWallThicknessCmd->GetNewDoubleValue(newValue));
-    } else if (command == fFiducialRadiusCmd) {
-        fDetectorConstruction->SetFiducialRadius(fFiducialRadiusCmd->GetNewDoubleValue(newValue));
-    } else if (command == fFiducialHeightCmd) {
-        fDetectorConstruction->SetFiducialHeight(fFiducialHeightCmd->GetNewDoubleValue(newValue));
+    if (command == fGeometryFileNameCmd) {
+        fDetectorConstruction->SetGeometryFileName(newValue);
     }
 }
 
-}
+} // namespace G4XamsSim

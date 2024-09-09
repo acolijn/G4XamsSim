@@ -21,15 +21,15 @@ class Geant4Analyzer:
             label (str, optional): The label to use for the plot.
         """
 
-        manager = RunManager("../scripts/config.json")
+        manager = RunManager("../run/rundb.json")
 
         self.file_paths = manager.get_output_root_files(run_id, first_only=first_only)
         self.settings = manager.get_run_settings(run_id, convert_units=True)
         self.label = ""
 
         if label == "":
-            if 'ion' in self.settings['gpsSettings']:
-                txt = self.settings['gpsSettings']['ion']
+            if 'ion' in self.settings['gps_settings']:
+                txt = self.settings['gps_settings']['ion']
                 Z = txt.split(" ")[0]
                 A = txt.split(" ")[1]
                 element_symbol = element(int(Z)).symbol
