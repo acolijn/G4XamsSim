@@ -3,7 +3,6 @@ uproot
 matplotlib
 numpy
 awkward
-mendeleev
 sphinx
 breathe
 sphinx-rtd-theme
