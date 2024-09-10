@@ -61,6 +61,7 @@ private:
     Materials *fMaterials = nullptr;
 
     std::string jsonFileName;
+    std::map<G4String, std::pair<G4double, G4double>> fClusteringParameters;
 
     DetectorConstructionMessenger* fMessenger;
 };

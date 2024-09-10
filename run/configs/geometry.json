@@ -147,6 +147,11 @@
         "shape": "tubs",
         "material": "GXe",
         "parent": "InnerCryostat",
+        "active": true, 
+        "clustering": {
+          "spatialThreshold": 10.0,
+          "timeThreshold": 1.0
+        },
         "dimensions": {
           "rMin": 0.0,
           "rMax": 76.2,   
@@ -211,6 +216,10 @@
         "material": "LXe",
         "parent": "GaseousXenon",
         "active": true, 
+        "clustering": {
+          "spatialThreshold": 10.0,
+          "timeThreshold": 1.0
+        },
         "dimensions": {
           "rMin": 0,
           "rMax": 55.0,

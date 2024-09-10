@@ -116,22 +116,28 @@ class Geant4Analyzer:
             raise ValueError("Data not loaded. Call load_data() first.")
         
         if cut is None:
-            cut = (self.raw['ncomp'] + self.raw['nphot'] == 1) & \
-                  (self.raw['type'] == 0)
+            cut = cut
         else:
             cut = cut(self.raw)
             
         if cut_hit is None:
-            cut_hit = cut & (self.raw['eh'] > 1.)
+            cut_hit = cut  & (self.raw['eh'] > 0. )
         else:
             cut_hit = cut_hit(self.raw) & cut & (self.raw['eh'] > 1.)
 
         for field in self.raw.fields:
             data_field = self.raw[field]
             if is_jagged(data_field):
-                data_field = ak.flatten(data_field[cut_hit])
+                # Flatten jagged arrays
+                
+                # make sure that you do not apply the cuts on the hits on the other fields   
+                if ( (field == 'edet') or (field == 'ndet') or (field == 'ncomp') or (field == 'nphot') ):
+                    data_field = ak.flatten(data_field[cut])
+                else:
+                    data_field = ak.flatten(data_field[cut_hit])
             else:
                 data_field = data_field[cut]
+
             self.data[field] = ak.to_numpy(data_field)
 
 

@@ -116,12 +116,32 @@ void DetectorConstruction::LoadGeometryFromJson(const std::string& jsonFileName)
         if (logVol) {
             logicalVolumeMap[volume["name"]] = logVol;  // Store logical volume
             // If the volume is marked as active, make it a sensitive detector
+            G4String name = volume["name"].get<std::string>();
+
             if (volume.contains("active") && volume["active"].get<bool>()) {
-              G4cout << "Making volume sensitive: " << volume["name"] << G4endl;
-              MakeVolumeSensitive(volume["name"].get<std::string>(), volume["name"].get<std::string>() + "Collection");
+                G4cout << "Making volume sensitive: " << name << G4endl;
+                MakeVolumeSensitive(name, name + "Collection");
+
+                G4double spatialThreshold = 10.0 * mm;  // default
+                G4double timeThreshold = 100.0 * ns;    // default
+
+                if (volume.contains("clustering")) {
+                    if (volume["clustering"].contains("spatialThreshold")) {
+                        spatialThreshold = volume["clustering"]["spatialThreshold"].get<double>() * mm;
+                    }
+                    if (volume["clustering"].contains("timeThreshold")) {
+                        timeThreshold = volume["clustering"]["timeThreshold"].get<double>() * ns;
+                    }
+                }
+
+                // Store the thresholds in the map
+                fClusteringParameters[name] = std::make_pair(spatialThreshold, timeThreshold);
             }
         }
     }
+
+    G4cout << "Setting clustering parameters in EventAction." << G4endl;
+    EventAction::SetClusteringParameters(fClusteringParameters);
 }
 
 /**

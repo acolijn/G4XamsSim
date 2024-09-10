@@ -51,24 +51,37 @@ class EventAction : public G4UserEventAction
 {
   public:
     EventAction();
+    
     ~EventAction();
 
     void BeginOfEventAction(const G4Event* event);// override;
     void EndOfEventAction(const G4Event* event);// override;
 
+
+    // per cluster information
     std::vector<G4double>& GetX(){return fX;};
     std::vector<G4double>& GetY(){return fY;};
     std::vector<G4double>& GetZ(){return fZ;};
-    std::vector<G4double>& GetE(){return fEd;};
+    std::vector<G4double>& GetE(){return fE;};
     std::vector<G4double>& GetW(){return fW;};
+    std::vector<G4int>& GetID(){return fID;};
+    // per detector information
+    std::vector<G4double>& GetEdet(){return fEdet;};
+    std::vector<G4int>& GetNdet(){return fNdet;};
+    std::vector<G4int>& GetNphot(){return fNphot;};
+    std::vector<G4int>& GetNcomp(){return fNcomp;};
 
-    void AddEdep(G4double edep) { fEdep += edep; }
     void AnalyzeHits(const G4Event* event);
     void ResetVariables();
 
     void SetSpatialThreshold(G4double value) { fSpatialThreshold = value; }
     void SetTimeThreshold(G4double value) { fTimeThreshold = value; }
     void AddHitsCollectionName(const G4String& name);
+
+    G4double GetSpatialThreshold(const G4String& collectionName);
+    G4double GetTimeThreshold(const G4String& collectionName);
+    static void SetClusteringParameters(const std::map<G4String, std::pair<G4double, G4double>>& params);
+
 
   private:
 
@@ -78,7 +91,7 @@ class EventAction : public G4UserEventAction
     //
     // functions for hit clustering
     //
-    void ClusterHits(std::vector<G4Sim::Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters);
+    void ClusterHits(std::vector<G4Sim::Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters, int collectionID);
 
     G4double CalculateDistance(const G4ThreeVector& pos1, const G4ThreeVector& pos2);
     G4double CalculateTimeDifference(G4double time1, G4double time2);
@@ -86,26 +99,30 @@ class EventAction : public G4UserEventAction
     // define here all the variables that you want to store for each event in the 
     // ntuple tree  
     G4double fLogWeight;
-    G4double fEdep;
-    G4int fNclusters;
-    G4int fNphot;
-    G4int fNcomp;
     G4int fEventID;
     G4int fEventType;
     G4double fXp;
     G4double fYp;
     G4double fZp;
 
-    std::vector<G4double> fEd;
+    std::vector<G4double> fE;
     std::vector<G4double> fX;
     std::vector<G4double> fY;
     std::vector<G4double> fZ;
     std::vector<G4double> fW;
-
+    std::vector<G4int> fID;
+    
+    std::vector<G4double> fEdet;
+    std::vector<G4int> fNdet;
+    std::vector<G4int> fNphot;
+    std::vector<G4int> fNcomp;
 
     //static std::mutex mtx; // Mutex for thread safety
     std::vector<G4String> fHitsCollectionNames;
     G4int verbosityLevel=0;
+        
+    static std::map<G4String, std::pair<G4double, G4double>> fClusteringParameters;
+
 
   protected:
     EventActionMessenger* fMessenger;

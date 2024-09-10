@@ -100,20 +100,25 @@ void EventAction::BeginOfEventAction(const G4Event* event)
  * - fW: Vector of weights.
  */
 void EventAction::ResetVariables() {
-  fEdep = 0.0;
   fLogWeight = 0.0;
   fEventType = 0;
-  fNclusters = 0;
-  fNphot = 0;
-  fNcomp = 0;
   fXp = 0.0;
   fYp = 0.0;
   fZp = 0.0;
-  fEd.clear();
+
+  // cluster information
+  fE.clear();
   fX.clear();
   fY.clear();
   fZ.clear();
   fW.clear();
+  fID.clear();
+  // detector information
+  fEdet.clear();
+  fNdet.clear();
+  fNphot.clear();
+  fNcomp.clear();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -140,61 +145,17 @@ void EventAction::EndOfEventAction(const G4Event* event)
   
   // get the energy depositis in keV
   analysisManager->FillNtupleDColumn(0, 0, fEventID);
-  analysisManager->FillNtupleDColumn(0, 1, fNclusters);
-  analysisManager->FillNtupleDColumn(0, 2, fNphot);
-  analysisManager->FillNtupleDColumn(0, 3, fNcomp);
-  analysisManager->FillNtupleDColumn(0, 4, fEdep);
-  analysisManager->FillNtupleDColumn(0, 5, fLogWeight);
-  analysisManager->FillNtupleDColumn(0, 6, fEventType);
-  analysisManager->FillNtupleDColumn(0, 7, fXp);
-  analysisManager->FillNtupleDColumn(0, 8, fYp);
-  analysisManager->FillNtupleDColumn(0, 9, fZp);
+  analysisManager->FillNtupleDColumn(0, 1, fLogWeight);
+  analysisManager->FillNtupleDColumn(0, 2, fEventType);
+  analysisManager->FillNtupleDColumn(0, 3, fXp);
+  analysisManager->FillNtupleDColumn(0, 4, fYp);
+  analysisManager->FillNtupleDColumn(0, 5, fZp);
+
   analysisManager->AddNtupleRow(0);
 
   if(verbosityLevel>0) G4cout << "EventAction::EndOfEventAction: Done...." << G4endl;	
 
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-/**
- * Analyzes the hits in the event.
- *
- * @param event The G4Event object representing the current event.
- */
-void EventAction::AnalyzeHits(const G4Event* event) {
-
-  // Get hits collections
-  G4HCofThisEvent* HCE = event->GetHCofThisEvent();
-  if (!HCE) {
-      G4ExceptionDescription msg;
-      msg << "No hits collection of this event found." << G4endl;
-      G4Exception("EventAction::EndOfEventAction()", "MyCode0001", JustWarning, msg);
-      return;
-  }
-
-  std::vector<Hit*> allHits;
-
-  // Loop over hits collections
-  for (size_t i = 0; i < fHitsCollectionNames.size(); ++i) {
-      G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(fHitsCollectionNames[i]);
-      auto *fHitsCollection = static_cast<HitsCollection*>(HCE->GetHC(hcID));
-      if (!fHitsCollection) continue;
-
-      G4int n_hit = fHitsCollection->entries();
-      if(verbosityLevel>0) G4cout << "Hits Collection: " << fHitsCollectionNames[i] << " has " << n_hit << " hits." << G4endl;
-      for (G4int j = 0; j < n_hit; ++j) {
-          Hit* hit = (*fHitsCollection)[j];
-          //if(verbosityLevel>0) hit->Print();
-          allHits.push_back(hit);
-      }
-  }
-
-  // cluster hits based on spatial and time thresholds
-  std::vector<Cluster> fClusters;
-  ClusterHits(allHits, fSpatialThreshold, fTimeThreshold, fClusters); 
-}
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4double EventAction::CalculateDistance(const G4ThreeVector& pos1, const G4ThreeVector& pos2) {
     return (pos1 - pos2).mag();
@@ -208,20 +169,103 @@ G4double EventAction::CalculateTimeDifference(G4double time1, G4double time2) {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+/**
+ * @brief Analyzes the hits in the given event and clusters them based on spatial and time thresholds.
+ * 
+ * This function retrieves the hits collections from the event, processes each collection to extract hits,
+ * and then clusters these hits using predefined spatial and time thresholds. The resulting clusters are
+ * stored in a vector for further analysis or output.
+ * 
+ * @param event Pointer to the G4Event object containing the hits to be analyzed.
+ * 
+ * The function performs the following steps:
+ * 1. Retrieves the hits collections from the event.
+ * 2. Iterates over each hits collection specified in `fHitsCollectionNames`.
+ * 3. For each collection, retrieves the hits and stores them in a temporary vector.
+ * 4. Retrieves the spatial and time thresholds for clustering from a configuration file or predefined map.
+ * 5. Clusters the hits based on the retrieved thresholds.
+ * 6. Merges the clusters from all collections into a single vector `allClusters`.
+ * 
+ * If no hits collection is found for the event, a warning is issued.
+ */
+void EventAction::AnalyzeHits(const G4Event* event) {
+    G4HCofThisEvent* HCE = event->GetHCofThisEvent();
+    if (!HCE) {
+        G4ExceptionDescription msg;
+        msg << "No hits collection of this event found." << G4endl;
+        G4Exception("EventAction::EndOfEventAction()", "MyCode0001", JustWarning, msg);
+        return;
+    }
+
+    std::vector<Cluster> allClusters;
+
+    // Loop over hits collections.
+    for (size_t i = 0; i < fHitsCollectionNames.size(); ++i) {
+        G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(fHitsCollectionNames[i]);
+        auto* fHitsCollection = static_cast<HitsCollection*>(HCE->GetHC(hcID));
+        if (!fHitsCollection) continue;
+
+        G4int n_hit = fHitsCollection->entries();
+        if (verbosityLevel > 0) G4cout << "Hits Collection: " << fHitsCollectionNames[i] << " has " << n_hit << " hits." << G4endl;
+
+        std::vector<Hit*> collectionHits;
+        for (G4int j = 0; j < n_hit; ++j) {
+            Hit* hit = (*fHitsCollection)[j];
+            collectionHits.push_back(hit);
+        }
+
+        // Get clustering parameters for this collection from the config file or a predefined map.
+        G4double spatialThreshold = GetSpatialThreshold(fHitsCollectionNames[i]) * mm;
+        G4double timeThreshold = GetTimeThreshold(fHitsCollectionNames[i]) * ns;
+
+        // Cluster hits for this collection.
+        std::vector<Cluster> clusters;
+        ClusterHits(collectionHits, spatialThreshold, timeThreshold, clusters, static_cast<int>(i)); // Add collection ID here.
+        allClusters.insert(allClusters.end(), clusters.begin(), clusters.end());
+    
+        // Use `allClusters` for further analysis or output.
+        G4double edet = 0.0;
+        G4int nclus = 0;
+        G4int ncomp = 0;
+        G4int nphot = 0;
+
+        for (auto& cluster : clusters) {
+
+          if (cluster.energyDeposit > 0*eV) {
+            nclus++;
+            edet += cluster.energyDeposit / keV;
+            //G4cout << "cluster: " << nclus << " edep: " << cluster.energyDeposit / keV << " keV" << G4endl;
+            fE.push_back(cluster.energyDeposit / keV);
+            fX.push_back(cluster.position.x());
+            fY.push_back(cluster.position.y());
+            fZ.push_back(cluster.position.z());
+            fID.push_back(cluster.collectionID);
+            fW.push_back(fLogWeight);
+          }
+        }
+        //G4cout << "Total energy deposit: " << edet << " keV" << G4endl;
+        fEdet.push_back(edet);
+        fNdet.push_back(nclus);
+        fNphot.push_back(ncomp);
+        fNcomp.push_back(nphot);
+    }
+  }
 
 /**
- * @brief Clusters hits based on spatial and time thresholds.
- * 
- * This function takes a vector of hits and clusters them based on their spatial and time proximity.
- * Hits that are within the specified spatial and time thresholds are added to the same cluster.
- * If a hit does not belong to any existing cluster, a new cluster is created for that hit.
- * 
- * @param hits The vector of hits to be clustered.
- * @param spatialThreshold The maximum spatial distance for hits to be considered part of the same cluster.
- * @param timeThreshold The maximum time difference for hits to be considered part of the same cluster.
- * @param clusters The vector of clusters to store the clustered hits.
+ * @brief Clusters hits based on spatial and temporal thresholds.
+ *
+ * This function processes a list of hits, normalizes their times relative to the start of the event,
+ * and clusters them based on spatial and temporal thresholds. It first identifies cluster seeds based
+ * on the process type (e.g., Compton or photoelectric), then clusters the remaining hits, and finally
+ * merges clusters that are close together.
+ *
+ * @param hits A vector of pointers to Hit objects to be clustered.
+ * @param spatialThreshold The maximum spatial distance between hits to be considered part of the same cluster.
+ * @param timeThreshold The maximum time difference between hits to be considered part of the same cluster.
+ * @param clusters A vector of Cluster objects where the resulting clusters will be stored.
+ * @param collectionID An identifier for the collection of hits being processed.
  */
-void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters) {
+void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold, G4double timeThreshold, std::vector<Cluster>& clusters, int collectionID) {
 
     if (hits.empty()) return;  // No hits, nothing to do.
 
@@ -238,99 +282,95 @@ void EventAction::ClusterHits(std::vector<Hit*>& hits, G4double spatialThreshold
         hit->time -= startTime;
     }
 
-    // 
-    // Finding the cluster seeds. A cluster seed is a hit from a primary track doing a Compton or photoelectric interaction.
-    // For the fast simulation the primary track can have another trackID, so we do not need to check the ID.
-    //
-    for (auto& hit : hits){      
-      G4String process = hit->processType;
-      G4int trackID = hit->trackID;
+    // Find cluster seeds based on the process (e.g., Compton or photoelectric).
+    G4int ncomp = 0;
+    G4int nphot = 0;
 
-      G4bool isRelevantProcess = (process == "compt" || process == "phot");
+    for (auto& hit : hits) {
+        G4String process = hit->processType;
+        G4int trackID = hit->trackID;
 
-      if (process == "compt") fNcomp++;
-      if (process == "phot") fNphot++;
-      if (isRelevantProcess) {
-          clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}});
-          hit->used = true;
-      }
+        G4bool isRelevantProcess = (process == "compt" || process == "phot");
+
+        if (process == "compt") ncomp++;
+        if (process == "phot") nphot++;
+        if (isRelevantProcess) {
+            clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}, collectionID});
+            hit->used = true;
+        }
     }
 
-    //
-    // Clustering the hits, with the seeds already in the cluster vector
-    //
+    // Cluster the remaining hits.
     for (auto& hit : hits) {
-        if(verbosityLevel>0 && (fNcomp+fNphot == 1)) hit->Print();
         if (hit->used) continue;
 
         bool addedToCluster = false;
         for (auto& cluster : clusters) {
+            if (cluster.collectionID != collectionID) continue;  // Ensure we only cluster within the same collection.
+
             if (CalculateDistance(hit->position, cluster.position) < spatialThreshold &&
                 CalculateTimeDifference(hit->time, cluster.time) < timeThreshold) {
-                
+
                 G4double energyDeposit = hit->energyDeposit;
-                if(energyDeposit > 0*eV) {
-                  G4int clusterSize = cluster.hits.size();
-                  cluster.position = (cluster.position * clusterSize + hit->position) / (clusterSize + 1);
-                  cluster.energyDeposit += energyDeposit; // Sum energy deposits
-                  cluster.time = (cluster.time * clusterSize + hit->time) / (clusterSize + 1); // Update average time
-                  cluster.hits.push_back(hit);
-                  addedToCluster = true;
-                  break;
+                if (energyDeposit > 0 * eV) {
+                    G4int clusterSize = cluster.hits.size();
+                    cluster.position = (cluster.position * clusterSize + hit->position) / (clusterSize + 1);
+                    cluster.energyDeposit += energyDeposit;
+                    cluster.time = (cluster.time * clusterSize + hit->time) / (clusterSize + 1);
+                    cluster.hits.push_back(hit);
+                    addedToCluster = true;
+                    break;
                 }
             }
         }
-        // If the hit was not added to any existing cluster, create a new cluster
         if (!addedToCluster) {
-            clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}});
+            clusters.push_back(Cluster{hit->position, hit->energyDeposit, hit->time, {hit}, collectionID});
         }
     }
 
-    // Merge close clusters
-
+    // Merge clusters that are close together.
     for (size_t i = 0; i < clusters.size(); ++i) {
-        for (size_t j = i + 1; j < clusters.size(); ) {
+        for (size_t j = i + 1; j < clusters.size();) {
+            if (clusters[i].collectionID != clusters[j].collectionID) {
+                ++j;
+                continue;
+            }
             if (CalculateDistance(clusters[i].position, clusters[j].position) < spatialThreshold &&
                 CalculateTimeDifference(clusters[i].time, clusters[j].time) < timeThreshold) {
 
-                // Merge cluster j into cluster i
+                // Merge cluster j into cluster i.
                 G4int totalHits = clusters[i].hits.size() + clusters[j].hits.size();
                 clusters[i].position = (clusters[i].position * clusters[i].hits.size() + clusters[j].position * clusters[j].hits.size()) / totalHits;
                 clusters[i].energyDeposit += clusters[j].energyDeposit;
                 clusters[i].time = (clusters[i].time * clusters[i].hits.size() + clusters[j].time * clusters[j].hits.size()) / totalHits;
                 clusters[i].hits.insert(clusters[i].hits.end(), clusters[j].hits.begin(), clusters[j].hits.end());
 
-                // Remove cluster j
                 clusters.erase(clusters.begin() + j);
             } else {
-                ++j; // Only increment if no merge
+                ++j;
             }
         }
     }
+}
 
-    //G4cout << "Number of clusters: " << clusters.size() << G4endl;
-    // Calculate cluster positions and store into ntuple variables
-    fNclusters = 0;
-
-    for (auto& cluster : clusters) {
-      if(verbosityLevel>1  && (fNcomp+fNphot == 1)){
-        G4cout <<"Cluster: " << G4endl;
-        G4cout <<"                 position: " << cluster.position << G4endl;
-        G4cout <<"                 energyDeposit: " << cluster.energyDeposit << G4endl;
-        G4cout <<"                 weight: " << fLogWeight << G4endl;
-      }
-      //cluster.position /= cluster.hits.size();
-      if (cluster.energyDeposit > 0*eV) {
-        fNclusters++;
-        fEdep += cluster.energyDeposit / keV;
-        fEd.push_back(cluster.energyDeposit / keV);
-        fX.push_back(cluster.position.x());
-        fY.push_back(cluster.position.y());
-        fZ.push_back(cluster.position.z());
-        fW.push_back(fLogWeight);
-      }
+G4double EventAction::GetSpatialThreshold(const G4String& collectionName) {
+    if (fClusteringParameters.find(collectionName) != fClusteringParameters.end()) {
+        return fClusteringParameters[collectionName].first;
     }
+    return 10.0 * mm;  // default value if not found
+}
 
+G4double EventAction::GetTimeThreshold(const G4String& collectionName) {
+    if (fClusteringParameters.find(collectionName) != fClusteringParameters.end()) {
+        return fClusteringParameters[collectionName].second;
+    }
+    return 100.0 * ns;  // default value if not found
+}
+
+std::map<G4String, std::pair<G4double, G4double>> EventAction::fClusteringParameters;
+
+void EventAction::SetClusteringParameters(const std::map<G4String, std::pair<G4double, G4double>>& params) {
+    fClusteringParameters = params;
 }
 
 
