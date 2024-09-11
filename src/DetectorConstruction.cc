@@ -60,12 +60,16 @@ DetectorConstruction::~DetectorConstruction() {}
  */
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
-  //const std::string& jsonFileName = "/user/z37/g4/G4XamsSim/geometry.json";
-  G4cout << "DetectorConstruction::Construct: Loading geometry from JSON file: " << jsonFileName << G4endl;
-  LoadGeometryFromJson(jsonFileName);
-  G4cout << "DetectorConstruction::Construct: Geometry loaded successfully!" << G4endl;
+    // construct materials
+    fMaterials = new Materials(matFileName);
+    fMaterials->DefineMaterials();
 
-  return fWorldPhysical;
+    // construct geometry
+    G4cout << "DetectorConstruction::Construct: Loading geometry from JSON file: " << geoFileName << G4endl;
+    LoadGeometryFromJson(geoFileName);
+    G4cout << "DetectorConstruction::Construct: Geometry loaded successfully!" << G4endl;
+
+    return fWorldPhysical;
 }
 
 /**
@@ -76,24 +80,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
  * @param fileName The name of the JSON file.
  */
 void DetectorConstruction::SetGeometryFileName(const std::string& fileName) {
-    jsonFileName = fileName;
-    G4cout << "DetectorConstruction::SetGeometryFilename: JSON file name set to: " << jsonFileName << G4endl;
+    geoFileName = fileName;
+    G4cout << "DetectorConstruction::SetGeometryFilename: JSON file name set to: " << geoFileName << G4endl;
 }
+
+void DetectorConstruction::SetMaterialFileName(const std::string& fileName) {
+    matFileName = fileName;
+    G4cout << "DetectorConstruction::SetMaterialFilename: JSON file name set to: " << matFileName << G4endl;
+}   
 
 /**
  * Loads the geometry from a JSON file.
  * 
  * @param jsonFileName The path to the JSON file containing the geometry information.
  */
-void DetectorConstruction::LoadGeometryFromJson(const std::string& jsonFileName) {
+void DetectorConstruction::LoadGeometryFromJson(const std::string& geoFileName) {
 
-    // construct materials
-    fMaterials = new Materials();
-    fMaterials->DefineMaterials();
-
-    std::ifstream inputFile(jsonFileName);
+    std::ifstream inputFile(geoFileName);
     if (!inputFile.is_open()) {
-        G4cerr << "DetectorConstruction::LoadGeometryFromJson: Error: Could not open geometry JSON file: " << jsonFileName << G4endl;
+        G4cerr << "DetectorConstruction::LoadGeometryFromJson: Error: Could not open geometry JSON file: " << geoFileName << G4endl;
         exit(-1);	
     }
 

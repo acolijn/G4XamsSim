@@ -31,6 +31,8 @@ class DetectorConstructionMessenger : public G4UImessenger {
     private:
         DetectorConstruction* fDetectorConstruction;
         G4UIcmdWithAString* fGeometryFileNameCmd;  // New command to set geometry file name
+        G4UIcmdWithAString* fMaterialFileNameCmd;  // New command to set material file name
+
 };
 
 }

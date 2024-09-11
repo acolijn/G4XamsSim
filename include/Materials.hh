@@ -1,6 +1,9 @@
 #ifndef __MATERIALS_HH__
 #define __MATERIALS_HH__
 
+#include "G4String.hh"
+#include "G4Material.hh"
+
 /**
  * @namespace G4Sim
  * @brief Namespace for the G4Sim library.
@@ -28,10 +31,13 @@ class Materials {
     // The FindOrBuildMaterial() method takes a string as an argument, which is the name of the material.
 
     public:
-        Materials();
+        Materials(G4String fileName);
         ~Materials();
         void DefineMaterials();
+        void Print(G4Material* material);
     private:
+
+        G4String matFileName;
 
 };
 

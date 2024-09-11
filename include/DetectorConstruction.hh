@@ -41,6 +41,7 @@ public:
         
     // set the JSON geometry file name
     void SetGeometryFileName(const std::string& fileName);
+    void SetMaterialFileName(const std::string& fileName);
 
 private:
     G4VPhysicalVolume* PlaceVolumeWithRotation(G4LogicalVolume* logicalVolume, 
@@ -66,7 +67,9 @@ private:
     G4bool fCheckOverlaps = true;
     Materials *fMaterials = nullptr;
 
-    std::string jsonFileName;
+    std::string geoFileName;
+    std::string matFileName;
+    
     std::map<G4String, std::pair<G4double, G4double>> fClusteringParameters;
 
     DetectorConstructionMessenger* fMessenger;

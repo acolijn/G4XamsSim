@@ -24,13 +24,19 @@ DetectorConstructionMessenger::DetectorConstructionMessenger(DetectorConstructio
 
     fGeometryFileNameCmd = new G4UIcmdWithAString("/detector/setGeometryFileName", this);
     fGeometryFileNameCmd->SetGuidance("Set the geometry JSON file name.");
-    fGeometryFileNameCmd->SetParameterName("fileName", false);
+    fGeometryFileNameCmd->SetParameterName("geoFileName", false);
     fGeometryFileNameCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    fMaterialFileNameCmd = new G4UIcmdWithAString("/detector/setMaterialFileName", this);
+    fMaterialFileNameCmd->SetGuidance("Set the material JSON file name.");
+    fMaterialFileNameCmd->SetParameterName("matFileName", false);
+    fMaterialFileNameCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
 
 DetectorConstructionMessenger::~DetectorConstructionMessenger() {
     delete fGeometryFileNameCmd;
+    delete fMaterialFileNameCmd;
 }
 
 /**
@@ -46,6 +52,8 @@ void DetectorConstructionMessenger::SetNewValue(G4UIcommand* command, G4String n
 
     if (command == fGeometryFileNameCmd) {
         fDetectorConstruction->SetGeometryFileName(newValue);
+    } else if (command == fMaterialFileNameCmd) {
+        fDetectorConstruction->SetMaterialFileName(newValue);
     }
 }
 

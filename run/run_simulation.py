@@ -102,12 +102,13 @@ def generate_gps_settings(gps_settings):
     
     return "\n".join(commands)
 
-def generate_geometry_settings(geometry_settings):
+def generate_detector_configuration(detector_configuration):
     """
     Generate the geometry commands based on the provided geometry_settings.
     """
     commands = [
-        f"/detector/setGeometryFileName {geometry_settings['geometryFileName']}",
+        f"/detector/setGeometryFileName {detector_configuration['geometryFileName']}",
+        f"/detector/setMaterialFileName {detector_configuration['materialFileName']}",
     ]
     return "\n".join(commands)
 
@@ -158,7 +159,7 @@ def generate_mac_file(settings, path_manager, beam_on, random_seed1, job_id):
     """
     # Generate different sections of the macro file
     gps_commands = generate_gps_settings(settings["gps_settings"])
-    geometry_commands = generate_geometry_settings(settings["geometry_settings"])
+    detector_commands = generate_detector_configuration(settings["detector_configuration"])
     run_commands = generate_run_settings(settings["run_settings"], path_manager, job_id)
     run_section = generate_run_control(beam_on, random_seed1, random_seed1 + 1)
     
@@ -168,7 +169,7 @@ def generate_mac_file(settings, path_manager, beam_on, random_seed1, job_id):
         f"/run/verbose {settings['verbose']}",
         f"/tracking/verbose {settings['verbose']}",
         "# define the detector geometry",
-        geometry_commands,
+        detector_commands,
         "/run/initialize",
         gps_commands,
         run_commands,

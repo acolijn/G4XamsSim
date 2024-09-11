@@ -14,6 +14,7 @@
 #include "Hit.hh"
 #include "G4SystemOfUnits.hh"
 
+
 /**
  * @namespace G4Sim
  * @brief Namespace for the G4Sim library.
