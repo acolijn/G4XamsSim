@@ -284,13 +284,25 @@ def prepare_settings(args, path_manager):
         dict: The prepared simulation settings.
     """
     settings = load_settings(args.json_file)
+
+        # copy the geometry and material files to the output directory
+    shutil.copy(settings["detector_configuration"]["geometryFileName"], path_manager.output_dir)
+    shutil.copy(settings["detector_configuration"]["materialFileName"], path_manager.output_dir)
+
     random_seed = random.randint(0, 1000000)
     settings['randomSeed'] = random_seed
     settings['beamOn'] = args.beam_on
     settings_file = os.path.join(path_manager.output_dir, "settings.json")
 
+    # replace the geometry and material file paths in the settings with the copied paths
+    settings["detector_configuration"]["geometryFileName"] = os.path.join(path_manager.output_dir, os.path.basename(settings["detector_configuration"]["geometryFileName"]))
+    settings["detector_configuration"]["materialFileName"] = os.path.join(path_manager.output_dir, os.path.basename(settings["detector_configuration"]["materialFileName"]))
+
     with open(settings_file, 'w') as json_file:
         json.dump(settings, json_file, indent=4)
+
+
+
     return settings
 
 def execute_jobs(args, settings, path_manager):
