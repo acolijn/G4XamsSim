@@ -3,6 +3,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4VSolid.hh"
@@ -42,6 +43,11 @@ public:
     void SetGeometryFileName(const std::string& fileName);
 
 private:
+    G4VPhysicalVolume* PlaceVolumeWithRotation(G4LogicalVolume* logicalVolume, 
+                                              G4LogicalVolume* parentVolume, 
+                                              const G4ThreeVector& position, 
+                                              const nlohmann::json& rotationJson, 
+                                              const G4String& name);
     void LoadGeometryFromJson(const std::string& jsonFileName);
     void MakeVolumeSensitive(const G4String& volumeName, const G4String& collectionName);
     G4LogicalVolume* ConstructVolume(const nlohmann::json& volumeDef);
