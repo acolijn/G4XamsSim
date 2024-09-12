@@ -1,8 +1,10 @@
 #include "DetectorConstruction.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4Sphere.hh"
 #include "G4UnionSolid.hh"
 #include "G4SubtractionSolid.hh"
+
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -14,7 +16,6 @@
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
 #include "G4VisAttributes.hh"
-#include "G4SystemOfUnits.hh"
 
 #include "DetectorConstructionMessenger.hh"
 #include "Materials.hh"
@@ -248,6 +249,7 @@ G4LogicalVolume* DetectorConstruction::ConstructVolume(const json& volumeDef) {
         logicalVolume = new G4LogicalVolume(solid, material, name);
     }
 
+    // Set the attributes of the logical volume, like visibility, color, transparency, etc.
     SetAttributes(volumeDef, logicalVolume);
  
     return logicalVolume;
@@ -403,6 +405,14 @@ G4VSolid* DetectorConstruction::CreateSolid(const json& solidDef) {
         G4double y = solidDef["dimensions"]["y"].get<double>() * mm;
         G4double z = solidDef["dimensions"]["z"].get<double>() * mm;
         return new G4Box("Box", x / 2, y / 2, z / 2);
+    } else if (shape == "sphere"){
+        G4double rMin = solidDef["dimensions"]["rMin"].get<double>() * mm;
+        G4double rMax = solidDef["dimensions"]["rMax"].get<double>() * mm;
+        G4double startPhi = solidDef["dimensions"]["startPhi"].get<double>() * deg;
+        G4double endPhi = solidDef["dimensions"]["endPhi"].get<double>() * deg;
+        G4double startTheta = solidDef["dimensions"]["startTheta"].get<double>() * deg;
+        G4double endTheta = solidDef["dimensions"]["endTheta"].get<double>() * deg;
+        return new G4Sphere("Sphere", rMin, rMax, startPhi, endPhi, startTheta, endTheta);
     } else {
         G4cerr << "Error: Unsupported shape: " << shape << G4endl;
         exit(-1);
