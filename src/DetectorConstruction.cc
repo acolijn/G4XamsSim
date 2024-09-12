@@ -2,6 +2,7 @@
 #include "G4Box.hh"
 #include "G4Tubs.hh"
 #include "G4UnionSolid.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -201,12 +202,8 @@ G4LogicalVolume* DetectorConstruction::ConstructVolume(const json& volumeDef) {
     G4cout << "DetectorConstruction::ConstructVolume: Constructing volume: " << name << G4endl;
     G4cout << "DetectorConstruction::ConstructVolume: Material: " << material->GetName() << G4endl;  
 
-    // Handle compound shapes (e.g., G4UnionSolid)
-
     // if shape is 'union'
     if (volumeDef["shape"].get<std::string>() == "union"){
-
-    //if (volumeDef.contains("components")) {
         G4VSolid* unionSolid = nullptr;
         for (const auto& component : volumeDef["components"]) {
             // create the solid
@@ -225,12 +222,64 @@ G4LogicalVolume* DetectorConstruction::ConstructVolume(const json& volumeDef) {
             }
         }
         logicalVolume = new G4LogicalVolume(unionSolid, material, name);
+    // if shape is 'subtraction'
+    } else if (volumeDef["shape"].get<std::string>() == "subtraction"){
+        G4VSolid* subtractionSolid = nullptr;
+        for (const auto& component : volumeDef["components"]) {
+            // create the solid
+            G4VSolid* solid = CreateSolid(component);
+            // its relative position
+            G4ThreeVector position(component["placement"]["x"].get<double>() * mm,
+                                   component["placement"]["y"].get<double>() * mm,
+                                   component["placement"]["z"].get<double>() * mm);
+            // its rotation (if exists)
+            G4RotationMatrix* rotation = GetRotationMatrix(component);
+            // Call the function that handles rotation
+            if (!subtractionSolid) {
+                subtractionSolid = solid;  // First component
+            } else {
+                subtractionSolid = new G4SubtractionSolid(name, subtractionSolid, solid, rotation, position);
+            }
+        }
+        logicalVolume = new G4LogicalVolume(subtractionSolid, material, name);	
+    // if shape is 'tubs' or 'box'
     } else {
         G4VSolid* solid = CreateSolid(volumeDef);
         logicalVolume = new G4LogicalVolume(solid, material, name);
     }
+
+    SetAttributes(volumeDef, logicalVolume);
  
     return logicalVolume;
+}
+
+/**
+ * @brief Sets the attributes of a given logical volume based on the provided JSON definition.
+ *
+ * This function configures the attributes of the specified logical volume using the
+ * parameters defined in the JSON object. The attributes may include properties such as
+ * material, color, visibility, and other visualization settings.
+ *
+ * @param volumeDef A JSON object containing the definition of the volume attributes.
+ * @param logicalVolume A pointer to the G4LogicalVolume whose attributes are to be set.
+ */
+void DetectorConstruction::SetAttributes(const json& volumeDef, G4LogicalVolume* logicalVolume) {
+    G4VisAttributes* visAttributes = new G4VisAttributes();
+
+    if (volumeDef.contains("visible")) {
+        visAttributes->SetVisibility(volumeDef["visible"].get<bool>());
+    } else {
+        visAttributes->SetVisibility(true);
+    }
+
+    if (volumeDef.contains("color")) {
+        std::vector<double> color = volumeDef["color"].get<std::vector<double>>();
+        visAttributes->SetColour(G4Colour(color[0], color[1], color[2], color[3]));
+    } else {
+        visAttributes->SetColour(G4Colour(0.5, 0.5, 0.5, 0.5));
+    }
+
+    logicalVolume->SetVisAttributes(visAttributes);
 }
 
 /**

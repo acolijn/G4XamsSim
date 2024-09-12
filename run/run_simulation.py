@@ -157,7 +157,7 @@ def generate_mac_file(settings, path_manager, beam_on, random_seed1, job_id):
     Returns:
         str: The path to the generated macro file.
     """
-    # Generate different sections of the macro file
+
     gps_commands = generate_gps_settings(settings["gps_settings"])
     detector_commands = generate_detector_configuration(settings["detector_configuration"])
     run_commands = generate_run_settings(settings["run_settings"], path_manager, job_id)

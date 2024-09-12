@@ -6,6 +6,9 @@
       "Water": {
         "nist": "G4_WATER"
       },
+      "Pb": {
+        "nist": "G4_Pb"
+      },
       "LXe": {
         "name": "LXe",
         "state": "kStateLiquid",
@@ -53,6 +56,15 @@
           "Cr": 0.18,
           "Ni": 0.12
         }
+      },
+      "NaI": {	
+        "name": "NaI",
+        "state": "kStateSolid",
+        "density": "3.67 g/cm3",
+        "components": {
+          "Na": 0.5,
+          "I": 0.5
+        } 
       }
     }
   }

@@ -46,6 +46,7 @@ public:
 private:
     G4VPhysicalVolume* PlaceVolume(const nlohmann::json& volumeDef, G4LogicalVolume* logicalVolume);
     G4RotationMatrix* GetRotationMatrix(const nlohmann::json& volumeDef);
+    void SetAttributes(const nlohmann::json& volumeDef, G4LogicalVolume* logicalVolume);
     void LoadGeometryFromJson(const std::string& jsonFileName);
     void MakeVolumeSensitive(const G4String& volumeName, const G4String& collectionName);
     G4LogicalVolume* ConstructVolume(const nlohmann::json& volumeDef);
