@@ -132,7 +132,7 @@ class Geant4Analyzer:
                 
                 # make sure that you do not apply the cuts on the hits on the other fields   
                 if ( (field == 'edet') or (field == 'ndet') or (field == 'ncomp') or (field == 'nphot') ):
-                    data_field = ak.flatten(data_field[cut])
+                    data_field = data_field[cut]
                 else:
                     data_field = ak.flatten(data_field[cut_hit])
             else:
