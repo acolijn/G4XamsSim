@@ -120,7 +120,7 @@ def generate_run_settings(run_settings, path_manager, job_id):
     
     commands = [
         f"/run/setOutputFileName {output_file_name}",
-        f"/run/printProgress {run_settings['printProgress']}",
+        f"/run/printProgress {run_settings['printProgress']}", 
     ]
     
     return "\n".join(commands)
